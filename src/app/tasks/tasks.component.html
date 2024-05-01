@@ -1,0 +1,194 @@
+<app-header> </app-header>
+<div class="container w-100">
+  <h1 class="text-center">Kanban Board</h1>
+  <div class="w-100 d-flex justify-content-end">
+    <button (click)="showAddDialog()" class="btn btn-primary">Add Task</button>
+  </div>
+  <div class="kanban-board row">
+    <div class="col-md-4 col-sm-12" *ngFor="let status of statuses">
+      <h2>{{ status }}</h2>
+      <div
+        (dragover)="allowDrop($event)"
+        (drop)="onDrop($event, status)"
+        style="min-height: 100vh"
+      >
+        <div
+          class="task"
+          [style.backgroundColor]="getStatusColor(status)"
+          *ngFor="let task of tasks | filterByStatus : status"
+          draggable="true"
+          (dragstart)="onDragStart($event, task)"
+        >
+        <a
+        (click)="showDeleteDialog(task)"
+        class="btn btn-danger float-end p-1"
+        >Delete
+      </a>
+      <h3>{{ task.title }}</h3>
+      <p>{{ task.description }}</p>
+      <p>Due Date: {{ task.duedate }}</p>
+      <div class="w-100 d-flex justify-content-center">
+        <a
+          [routerLink]="['/taskDetails', task.taskId]"
+          class="btn btn-success p-1"
+          >Details
+        </a>
+
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- add new task -->
+  <div>
+    <p-dialog
+      header="Add new task"
+      [(visible)]="visibleAddDialog"
+      [modal]="true"
+      [style]="{ width: '50vw' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <div *ngIf="taskerr" class="alert alert-danger">{{ taskerr }}</div>
+      <div class="container-fluid">
+        <form [formGroup]="addTaskForm">
+          <div class="row">
+            <div class="col col-sm-12 my-2">
+              <label for="name">Title</label>
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                formControlName="title"
+                placeholder="Enter Task Title"
+              />
+              <div
+                class="alert alert-danger"
+                *ngIf="
+                  addTaskForm.controls['title'].invalid &&
+                  addTaskForm.controls['title'].touched
+                "
+              >
+                <span *ngIf="addTaskForm.controls['title'].hasError('required')"
+                  >Task Title is Required</span
+                >
+              </div>
+            </div>
+            <div class="col col-sm-12 my-2">
+              <label for="Description">Description</label>
+              <textarea
+                id="Description"
+                class="form-control"
+                placeholder="Type here..."
+                formControlName="description"
+              ></textarea>
+              <div
+                class="alert alert-danger"
+                *ngIf="
+                  addTaskForm.controls['description'].invalid &&
+                  addTaskForm.controls['description'].touched
+                "
+              >
+                <span
+                  *ngIf="
+                    addTaskForm.controls['description'].hasError('required')
+                  "
+                  >Task Description is Required</span
+                >
+              </div>
+            </div>
+            <div class="col col-sm-12 my-2">
+              <label for="status" class="me-2">Status</label>
+              <p-dropdown
+                id="status"
+                [options]="statuses"
+                formControlName="status"
+                [showClear]="true"
+                placeholder="Select Task Status"
+                [virtualScroll]="true"
+              ></p-dropdown>
+              <div
+                class="alert alert-danger"
+                *ngIf="
+                  addTaskForm.controls['status'].invalid &&
+                  addTaskForm.controls['status'].touched
+                "
+              >
+                <span
+                  *ngIf="addTaskForm.controls['status'].hasError('required')"
+                  >Task status is Required</span
+                >
+              </div>
+            </div>
+            <div class="col col-sm-12 my-2">
+              <label for="duedate" class="me-2">Due Date</label>
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                formControlName="duedate"
+                placeholder="Enter Task duedate"
+              />
+              <div
+                class="alert alert-danger"
+                *ngIf="
+                  addTaskForm.controls['duedate'].invalid &&
+                  addTaskForm.controls['duedate'].touched
+                "
+              >
+                <span
+                  *ngIf="addTaskForm.controls['duedate'].hasError('required')"
+                  >Task duedate is Required</span
+                >
+                <span
+                  *ngIf="addTaskForm.controls['duedate'].hasError('pattern')"
+                  >Duedate must match pattern like : "dd/mm/yyyy"</span
+                >
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <ng-template pTemplate="footer">
+        <button
+          [disabled]="addTaskForm.invalid"
+          type="submit"
+          (click)="addTask(addTaskForm)"
+          class="btn btn-primary"
+        >
+          Add
+        </button>
+      </ng-template>
+    </p-dialog>
+  </div>
+
+  <!-- Delete Dialog -->
+<p-dialog
+[(visible)]="visibleDeleteDialog"
+[draggable]="false"
+[resizable]="false"
+[modal]="true"
+>
+<ng-template pTemplate="header">
+  <h3 class="text-danger">Attention</h3>
+</ng-template>
+
+<div class="container-fluid">
+  <p>Are you sure to delete {{ DeletedTitle }} Task?</p>
+</div>
+<ng-template pTemplate="footer">
+  <button type="button" class="btn btn-danger me-2" (click)="deleteTask()">
+    Delete
+  </button>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    (click)="visibleDeleteDialog = false"
+  >
+    Cancel
+  </button>
+</ng-template>
+</p-dialog>
+
+</div>

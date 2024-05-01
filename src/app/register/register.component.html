@@ -1,0 +1,94 @@
+<div class="container w-100">
+  <div class="mx-auto register-section">
+    <h6 class="register-title">Register</h6>
+    <div class="form-section">
+      <!-- <p-toast></p-toast> -->
+      <form [formGroup]="registerForm" (ngSubmit)="register(registerForm)">
+        <input
+          type="text"
+          class="form-control mt-2"
+          placeholder="First Name"
+          formControlName="firstName"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="
+            registerForm.controls['firstName'].invalid &&
+            registerForm.controls['firstName'].touched
+          "
+        >
+          <span *ngIf="registerForm.controls['firstName'].hasError('required')"
+            >First Name is Required</span
+          >
+        </div>
+        <input
+          type="text"
+          class="form-control mt-2"
+          placeholder="Last Name"
+          formControlName="lastName"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="
+            registerForm.controls['lastName'].invalid &&
+            registerForm.controls['lastName'].touched
+          "
+        >
+          <span *ngIf="registerForm.controls['lastName'].hasError('required')"
+            >Last Name is Required</span
+          >
+        </div>
+        <input
+          type="text"
+          class="form-control mt-2"
+          placeholder="Email"
+          formControlName="email"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="
+            registerForm.controls['email'].invalid &&
+            registerForm.controls['email'].touched
+          "
+        >
+          <span *ngIf="registerForm.controls['email'].hasError('required')"
+            >Email is Required</span
+          >
+          <span *ngIf="registerForm.controls['email'].hasError('pattern')"
+            >Email must match pattern like : "example1@gmail.com"</span
+          >
+        </div>
+        <input
+          type="password"
+          class="form-control mt-2"
+          placeholder="Password"
+          formControlName="password"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="
+            registerForm.controls['password'].invalid &&
+            registerForm.controls['password'].touched
+          "
+        >
+          <span *ngIf="registerForm.controls['password'].hasError('required')"
+            >Password is Required</span
+          >
+        </div>
+        <!-- <input class="form-control mt-2" required type="file" (change)="onFileSelected($event)"> -->
+
+        <button
+          [disabled]="registerForm.invalid"
+          type="submit"
+          class="btn submit-btn mt-2"
+        >
+          <i *ngIf="isLoading" class="pi pi-spin pi-spinner me-1"></i>
+          <span>Register</span>
+        </button>
+        <p class="ms-auto" style="width: max-content">
+          You have an account? <a routerLink="/login">Login</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

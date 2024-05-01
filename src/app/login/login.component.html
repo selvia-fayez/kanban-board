@@ -1,0 +1,59 @@
+<div class="container w-100">
+  <div class="mx-auto login-section">
+    <h6 class="login-title">Login</h6>
+    <p class="title">Glad you’re back.!</p>
+    <div class="form-section">
+      <!-- <p-toast></p-toast> -->
+      <form [formGroup]="loginForm" (ngSubmit)="login(loginForm)">
+        <input
+          type="text"
+          class="form-control mt-2"
+          placeholder="Email"
+          formControlName="email"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="
+            loginForm.controls['email'].invalid &&
+            loginForm.controls['email'].touched
+          "
+        >
+          <span *ngIf="loginForm.controls['email'].hasError('required')"
+            >Email is Required</span
+          >
+          <span *ngIf="loginForm.controls['email'].hasError('pattern')"
+            >Email must match pattern like : "example1@gmail.com"</span
+          >
+        </div>
+        <input
+          type="password"
+          class="form-control mt-2"
+          placeholder="Password"
+          formControlName="password"
+        />
+        <div
+          class="alert alert-danger"
+          *ngIf="
+            loginForm.controls['password'].invalid &&
+            loginForm.controls['password'].touched
+          "
+        >
+          <span *ngIf="loginForm.controls['password'].hasError('required')"
+            >Password is Required</span
+          >
+        </div>
+        <button
+          [disabled]="loginForm.invalid"
+          type="submit"
+          class="btn submit-btn mt-2"
+        >
+          <i *ngIf="isLoading" class="pi pi-spin pi-spinner me-1"></i>
+          <span>Login</span>
+        </button>
+        <p class="ms-auto" style="width: max-content">
+          You don't have an account? <a routerLink="/register">Register</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
